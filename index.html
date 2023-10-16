@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+
+ 
+</head>
+<body>
+    <button id="addUserBtn">Create New User</button>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>City</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="userTableBody">
+        </tbody>
+    </table>
+
+    <div class="popup" id="editPopup">
+        <div class="popup-content">
+            <h2>Edit User</h2>
+            <label for="editName">Name:</label>
+            <input type="text" id="editName"><br>
+            <label for="editAge">Age:</label>
+            <input type="number" id="editAge"><br>
+            <label for="editCity">City:</label>
+            <input type="text" id="editCity"><br>
+            <button id="editSubmit">Submit</button>
+            <button id="editCancel">Cancel</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    </body>
+    </html>
