@@ -9,7 +9,7 @@
  
 </head>
 <body>
-    <button id="addUserBtn">Create New User</button>
+    <button id="openModalBtn">Create New User</button>
     <table>
         <thead>
             <tr>
@@ -23,9 +23,11 @@
         </tbody>
     </table>
 
-    <div class="popup" id="editPopup">
-        <div class="popup-content">
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <span class="close" id="closeEditModalBtn">&times;</span>
             <h2>Edit User</h2>
+            <form id="editForm">
             <label for="editName">Name:</label>
             <input type="text" id="editName"><br>
             <label for="editAge">Age:</label>
@@ -34,6 +36,30 @@
             <input type="text" id="editCity"><br>
             <button id="editSubmit">Submit</button>
             <button id="editCancel">Cancel</button>
+        </form>
+        </div>
+    </div>
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModalBtn">&times;</span>
+            <h2>Create New User</h2>
+            <form id="userForm">
+                <label for="Name">Name:</label>
+                <input type="text" name="Name" id="Name"><br>
+                <label for="Age">Age:</label>
+                <input type="number" name="Age" id="Age"><br>
+                <label for="City">City:</label>
+                <input type="text" name="City" id="City"><br>
+                <button id="Submit">Submit</button><br>
+            </form>
+        </div>
+    </div>
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h2>Delete User</h2>
+            <p>Are you sure you want to delete this record?</p>
+            <button id="confirmDelete">Yes</button>
+            <button id="cancelDelete">No</button>
         </div>
     </div>
     <script src="script.js"></script>

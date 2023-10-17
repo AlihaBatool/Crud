@@ -26,14 +26,14 @@
                 editButton.className = "edit-btn";
                 editButton.textContent = "Edit";
                 editButton.addEventListener("click", function() {
-                    openEditPopup(index);
+                    openEditModal(index);
                 });
 
                 var deleteButton = document.createElement("span");
                 deleteButton.className = "delete-btn";
                 deleteButton.textContent = "Delete";
                 deleteButton.addEventListener("click", function() {
-                    deleteUser(index);
+                    openDeleteModal(index);
                 });
 
                 actionCell.appendChild(editButton);
@@ -48,8 +48,8 @@
             });
         }
 
-        // Function to open the edit popup
-        function openEditPopup(index) {
+        // Function to open the edit modal
+        function openEditModal(index) {
             var user = users[index];
             var editName = document.getElementById("editName");
             var editAge = document.getElementById("editAge");
@@ -59,35 +59,48 @@
             editAge.value = user.age;
             editCity.value = user.city;
 
-            var editPopup = document.getElementById("editPopup");
-            editPopup.style.display = "block";
+            var editModal = document.getElementById("editModal");
+            editModal.style.display = "block";
 
             // Handle the edit submission
-            var editSubmit = document.getElementById("editSubmit");
-            editSubmit.onclick = function() {
+            var editForm = document.getElementById("editForm");
+            editForm.onsubmit = function(event) {
+                event.preventDefault();
                 user.name = editName.value;
                 user.age = editAge.value;
                 user.city = editCity.value;
                 displayUsers();
-                editPopup.style.display = "none";
+                editModal.style.display = "none";
                 saveUsersToLocalStorage();
             };
 
             // Handle the cancel button
-            var editCancel = document.getElementById("editCancel");
-            editCancel.onclick = function() {
-                editPopup.style.display = "none";
+            var closeEditModalBtn = document.getElementById("closeEditModalBtn");
+            closeEditModalBtn.onclick = function() {
+                editModal.style.display = "none";
             };
         }
 
         // Function to delete a user
-        function deleteUser(index) {
-            if(confirm('Are you sure you want to delete this record')){
-            users.splice(index, 1);
+        function openDeleteModal(index) {
+            
+            var deleteModal= document.getElementById("deleteModal");
+            deleteModal.style.display="block"
+
+            var confirmDeleteBtn= document.getElementById("confirmDelete");
+            confirmDeleteBtn.onclick=function(){
+                users.splice(index,1);
+                deleteModal.style.display="none";
+                
             displayUsers();
             saveUsersToLocalStorage();
+            };
+            var cancelDeleteBtn= document.getElementById("cancelDelete");
+            cancelDeleteBtn.onclick=function(){
+                deleteModal.style.display="none";
+            };
         }
-    }
+    
 
         // Function to save users to local storage
         function saveUsersToLocalStorage() {
@@ -103,25 +116,43 @@
             }
         }
 
-        // Add a new user
-        var addUserBtn = document.getElementById("addUserBtn");
-        addUserBtn.onclick = function() {
-            var newName = prompt("Enter name:");
-            var newAge = prompt("Enter age:");
-            var newCity = prompt("Enter city:");
+        // Open Modal when the Create New User button is pressed
+        const openModalBtn = document.getElementById("openModalBtn");
+        const userModal = document.getElementById("userModal");
+        const closeModalBtn = document.getElementById("closeModalBtn");
 
-            if (newName && newAge && newCity) {
-                var newUser = {
-                    name: newName,
-                    age: parseInt(newAge),
-                    city: newCity
-                };
+        openModalBtn.addEventListener("click", function(){
+            userModal.style.display="block";
+        });
 
-                users.push(newUser);
-                displayUsers();
-                saveUsersToLocalStorage();
+        //Close Modal when "x" or background is clicked
+
+        closeModalBtn.addEventListener("click", function(){
+            userModal.style.display="none";
+        });
+
+        window.addEventListener("click", function(event){
+            if(event.target == userModal){
+                userModal.style.display="none"; 
             }
-        };
+        });
+
+        // Submit User Form
+const userForm = document.getElementById("userForm");
+userForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const Name = document.getElementById("Name").value;
+    const Age = document.getElementById("Age").value;
+    const City = document.getElementById("City").value;
+
+    const newUser = { name: Name, age: Age, city: City };
+    users.push(newUser);
+    displayUsers();
+    saveUsersToLocalStorage();
+
+    userModal.style.display = "none"; // Close the modal
+});
 
         // Load initial users and display them
         loadUsersFromLocalStorage();
