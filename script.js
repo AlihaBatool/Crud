@@ -1,10 +1,148 @@
 
+        const baseURL = 'https://65311eb24d4c2e3f333c6a6c.mockapi.io/';
+        async function retrieveData(){
+            try{
+                const response = await fetch(`${baseURL}/resource`);
+                if (response.ok){
+                    const data = await response.json();
+                    return data;
+                }
+                else{
+                    console.error('Failed to retrieve data. Status code:',response.status);
+                    return[];
+                }
+            }
+                catch(error){
+                    console.error('An error occured', error);
+                    return[];
+                }
+            
+        }
+        async function createResource(dataToCreate){
+            try{
+                const response = await fetch(`{$baseURL}/resource`,{
+                    method:'POST',
+                    headers: {
+                        'Content-Type':'application/json',
+                    },
+                    body: JSON.stringify(dataToCreate),
+                })
+                if(response.ok){
+                    const createResource = await response.json();
+                    console.log('Resource created successfully.');
+                    return createResource;
+                }
+                else
+                {
+                    console.error('Failed to create resource. Status code:', response.status);
+                    return null;
+           }
+        }
+           catch (error){
+            console.error('An error has occured', error);
+            return null;
+           }
+        }
+        async function updateResource(resourceId, updatedData){
+            try{
+                const response = await fetch(`${baseURL}/resource/${resourceId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(updatedData),
+                });
+                if(response.ok){
+                    const updateResource = await response.json();
+                    console.log('Resource updated successfully.');
+                    return updateResource; 
+                }
+                else {
+                    console.error('Failed to update resource. Status code', response.status);
+                    return null;
+                }
+            }
+            catch(error){
+                console.error('An error has occured', error);
+                return null;
+            }
+        }
+        async function deleteResourceInAPI(resourceId){
+            try{
+                const response = await fetch(`${baseURL}/resource/${resourceId}`,{
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type':'application/json',
+                    },
+                    body: JSON.stringify(deleteData),
+                });
+                if(response.ok){
+                    const deleteResource = await response.json();
+                    console.log('Resource deleted successfully');
+                    return deleteResource;
+                }
+                else
+                {
+                    console.error('Failed to delete resource. Status code', response.status);
+                    return null;
+                }
+            }
+            catch (error){
+                console.error('An error has occured', error);
+                return null;
+            }
+        }
+        //Function to create a new user in API
+        async function createUserInAPI(user){
+            try{
+                const response = await createUserInAPI(user);
+                if(response){
+                    users.push(response);
+                    displayUsers();
+                }
+            }
+            catch(error){
+                console.error('An error occured:', error);
+            }
+        }
+        //Function to update a new user
+        async function updateUserInAPI(user){
+            try{
+                const response = await updateUserInAPI(user.id, user);
+                if (response){
+                    //Update the local user data if needed
+                    displayUsers();
+                }
+            }
+            catch (error){
+                console.error('An error has occured:', error);
+            }
+            
+        }
+        //Function to delete a user from API
+        async function deleteUserFromAPI(userId){
+            try{
+                await deleteResourceInAPI(userId);
+                //Remove the user from local array if it exists
+                users = users.filter(user=> user.id !== userId);
+                displayUsers();
+            }
+            catch(error){
+                console.error('An error has occured:', error);
+            }
+        }
+        
+
         // Hard-coded initial user data
         var users = [
             { name: "Momina", age: 30, city: "New York" },
             { name: "Zohra", age: 25, city: "Lahore" },
             { name: "Ahsan", age: 35, city: "Karachi" }
         ];
+        async function loadusersfromAPI(){
+            users = await retrieveData();
+            displayUsers();
+        };
 
         // Function to display users in the table
         function displayUsers() {
@@ -66,12 +204,16 @@
             var editForm = document.getElementById("editForm");
             editForm.onsubmit = function(event) {
                 event.preventDefault();
-                user.name = editName.value;
-                user.age = editAge.value;
-                user.city = editCity.value;
-                displayUsers();
+                var editedUser = {
+                    id : users[editModalIndex].id,
+                    name : editName.value,
+                    age : editAge.value,
+                    city : editCity.value, 
+                };
+                updateUserInAPI(editedUser);
+                
                 editModal.style.display = "none";
-                saveUsersToLocalStorage();
+            
             };
 
             // Handle the cancel button
@@ -93,7 +235,7 @@
                 deleteModal.style.display="none";
                 
             displayUsers();
-            saveUsersToLocalStorage();
+            
             };
             var cancelDeleteBtn= document.getElementById("cancelDelete");
             cancelDeleteBtn.onclick=function(){
@@ -103,13 +245,13 @@
     
 
         // Function to save users to local storage
-        function saveUsersToLocalStorage() {
-            localStorage.setItem("users", JSON.stringify(users));
+        function saveUsersToAPI() {
+            API.setItem("users", JSON.stringify(users));
         }
 
         // Function to load users from local storage
-        function loadUsersFromLocalStorage() {
-            var savedUsers = localStorage.getItem("users");
+        function loadusersfromAPI() {
+            var savedUsers = API.getItem("users");
             if (savedUsers) {
                 users = JSON.parse(savedUsers);
                 displayUsers();
@@ -147,13 +289,13 @@ userForm.addEventListener("submit", function (event) {
     const City = document.getElementById("City").value;
 
     const newUser = { name: Name, age: Age, city: City };
-    users.push(newUser);
+    createUserInAPI(newUser);
     displayUsers();
-    saveUsersToLocalStorage();
+    
 
     userModal.style.display = "none"; // Close the modal
 });
 
         // Load initial users and display them
-        loadUsersFromLocalStorage();
-        displayUsers();
+        loadusersfromAPI();
+        
