@@ -7,6 +7,7 @@ table {
     background-color: aquamarine;
     border-radius: 5px;
     box-shadow: lightskyblue;
+    margin-top: 10px;
 }
 
 th, td {
@@ -79,11 +80,16 @@ th {
 }
 
 button {
-    
+    position:relative;
+    width: 150px;
+    height: 40px;
+    margin-bottom: 20px;
     background-color: aquamarine;
     color:blue;
     cursor: pointer;
     border-radius: 4px;
+    
+    
 }
 
 button:hover {
